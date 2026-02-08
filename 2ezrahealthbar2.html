@@ -151,4 +151,51 @@
     hpText.innerText = health + '%';
     
     // Critical Health Color Change
-    if (health < 30) { bar.classList.add('critical'); }
+    if (health < 30) { bar.classList.add('critical'); } 
+    else { bar.classList.remove('critical'); }
+  }
+
+  function spawnText(text, color) {
+    const el = document.createElement('div');
+    el.innerText = text;
+    el.className = 'float-text';
+    el.style.color = color;
+    wrapper.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+
+  function takeDamage() {
+    health = Math.max(0, health - 20);
+    updateBar();
+    border.classList.add('shake');
+    spawnText("-20 MISS!", "#ff3333");
+    setTimeout(() => border.classList.remove('shake'), 400);
+  }
+
+  function addSkill() {
+    health = Math.min(100, health + 15);
+    updateBar();
+    spawnText("PERFECT!", "#00ff00");
+    if(health === 100) {
+       spawnText("LEVEL UP!", "gold");
+       border.classList.add('gold-mode');
+       setTimeout(() => border.classList.remove('gold-mode'), 2000);
+    }
+  }
+
+  function toggleAuto() {
+    if (autoInterval) {
+      clearInterval(autoInterval);
+      autoInterval = null;
+      spawnText("MANUAL MODE", "white");
+    } else {
+      spawnText("AUTO PILOT", "yellow");
+      autoInterval = setInterval(() => {
+        Math.random() > 0.4? addSkill() : takeDamage();
+      }, 2000); // Action every 2 seconds
+    }
+  }
+</script>
+
+</body>
+</html>
